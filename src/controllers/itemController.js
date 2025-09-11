@@ -12,10 +12,10 @@ async function create(req, res) {
 async function list(req, res) {
   const rows = await Item.findAll({
     include: [
-      { model: Department, attributes: ['id', 'name'] },
-      { model: Supplier, attributes: ['id', 'name'] },
+      { model: Department, as: 'departamento', attributes: ['id', 'nome'] },
+      { model: Supplier, as: 'fornecedor', attributes: ['id', 'nome'] },
     ],
-    order: [['name', 'ASC']],
+    order: [['nome', 'ASC']],
   });
   res.json(rows);
 }
@@ -23,8 +23,8 @@ async function list(req, res) {
 async function getById(req, res) {
   const row = await Item.findByPk(req.params.id, {
     include: [
-      { model: Department, attributes: ['id', 'name'] },
-      { model: Supplier, attributes: ['id', 'name'] },
+      { model: Department, as: 'departamento', attributes: ['id', 'nome'] },
+      { model: Supplier, as: 'fornecedor', attributes: ['id', 'nome'] },
     ],
   });
   if (!row) return res.status(404).json({ message: 'Não encontrado' });

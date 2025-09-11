@@ -7,21 +7,21 @@ const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '8h';
 
 const registerValidators = [
-  body('name').notEmpty(),
+  body('nome').notEmpty(),
   body('email').isEmail(),
-  body('password').isLength({ min: 6 }),
-  body('role').optional().isIn(Object.values(ROLES)),
+  body('senha').isLength({ min: 6 }),
+  body('perfil').optional().isIn(Object.values(ROLES)),
 ];
 
 async function register(req, res) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
   try {
-    const { name, email, password, role = ROLES.USER } = req.body;
+    const { nome, email, senha, perfil = ROLES.VISUALIZADOR } = req.body;
     const exists = await User.findOne({ where: { email } });
     if (exists) return res.status(409).json({ message: 'Email já cadastrado' });
-    const user = await User.create({ name, email, passwordHash: password, role });
-    return res.status(201).json({ id: user.id, name: user.name, email: user.email, role: user.role });
+    const user = await User.create({ nome, email, senha, perfil });
+    return res.status(201).json({ id: user.id, nome: user.nome, email: user.email, perfil: user.perfil });
   } catch (err) {
     return res.status(500).json({ message: 'Erro ao registrar', error: err.message });
   }
@@ -29,21 +29,20 @@ async function register(req, res) {
 
 const loginValidators = [
   body('email').isEmail(),
-  body('password').notEmpty(),
+  body('senha').notEmpty(),
 ];
 
 async function login(req, res) {
-  console.log(req)
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
   try {
-    const { email, password } = req.body;
+    const { email, senha } = req.body;
     const user = await User.findOne({ where: { email } });
     if (!user) return res.status(401).json({ message: 'Credenciais inválidas' });
-    const ok = await user.checkPassword(password);
+    const ok = await user.checkPassword(senha);
     if (!ok) return res.status(401).json({ message: 'Credenciais inválidas' });
-    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-    return res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+    const token = jwt.sign({ id: user.id, email: user.email, perfil: user.perfil }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+    return res.json({ token, usuario: { id: user.id, nome: user.nome, email: user.email, perfil: user.perfil } });
   } catch (err) {
     return res.status(500).json({ message: 'Erro ao autenticar', error: err.message });
   }

@@ -10,7 +10,7 @@ async function create(req, res) {
 }
 
 async function list(req, res) {
-  const rows = await Department.findAll({ order: [['name', 'ASC']] });
+  const rows = await Department.findAll({ order: [['nome', 'ASC']] });
   res.json(rows);
 }
 
