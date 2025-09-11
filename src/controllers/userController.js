@@ -5,7 +5,7 @@ const { ROLES } = require('../utils/roles');
 const createValidators = [
   body('nome').notEmpty().withMessage('Nome é obrigatório'),
   body('email').isEmail().withMessage('Email deve ser válido'),
-  body('senha').isLength({ min: 6 }).withMessage('Senha deve ter pelo menos 6 caracteres'),
+  body('senha').optional().isLength({ min: 6 }).withMessage('Senha deve ter pelo menos 6 caracteres'),
   body('perfil').optional().isIn(Object.values(ROLES)).withMessage('Perfil deve ser ADMIN, OPERADOR ou VISUALIZADOR'),
 ];
 
@@ -32,10 +32,13 @@ async function create(req, res) {
       return res.status(409).json({ message: 'Email já cadastrado' });
     }
 
+    // Definir senha padrão "estoque123" se não for fornecida
+    const senhaFinal = senha || 'estoque123';
+
     const user = await User.create({
       nome,
       email,
-      senha,
+      senha: senhaFinal,
       perfil
     });
 
