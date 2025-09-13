@@ -2,11 +2,14 @@ const { DataTypes, Model } = require('sequelize');
 const { sequelize } = require('../config/database');
 
 const TIPO_ITEM = {
-  PRODUTO: 'PRODUTO',
-  MATERIAL: 'MATERIAL',
-  EQUIPAMENTO: 'EQUIPAMENTO',
-  FERRAMENTA: 'FERRAMENTA',
-  OUTROS: 'OUTROS'
+  PRODUTO : 'PRODUTO',
+  MATERIAL_TERAPEUTICO : 'MATERIAL TERAPEUTICO',
+  EQUIPAMENTO : 'EQUIPAMENTO',
+  FERRAMENTA : 'FERRAMENTA',
+  PAPELARIA : 'PAPELARIA',
+  INSUMOS : 'INSUMOS',
+  MATERIAL_LIMPEZA : 'MATERIA DE LIMPEZA',
+  OUTROS : 'OUTROS'
 };
 
 class Item extends Model {}

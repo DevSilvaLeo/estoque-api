@@ -8,7 +8,7 @@ async function start() {
   try {
     await ensureDatabase();
     await sequelize.authenticate();
-    await sequelize.sync({ force: true });
+    await sequelize.sync();
     // Bootstrap: ensure an admin user exists
     const { User } = require('./models');
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@local';

@@ -10,7 +10,7 @@ async function create(req, res) {
 }
 
 async function list(req, res) {
-  const rows = await Supplier.findAll({ order: [['name', 'ASC']] });
+  const rows = await Supplier.findAll({ order: [['nome', 'ASC']] });
   res.json(rows);
 }
 
